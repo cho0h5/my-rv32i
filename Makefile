@@ -1,4 +1,4 @@
-SRC = src/imm_gen.v src/regfile.v
+SRC = src/imm_gen.v src/regfile.v src/alu.v
 TB = tb/tb_regfile.v
 
 sim: $(SRC) $(TB)
