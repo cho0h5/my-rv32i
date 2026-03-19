@@ -14,7 +14,7 @@ module tb_cpu;
         $dumpfile("sim/dump.vcd");
         $dumpvars(0, tb_cpu);
         $readmemh("/tmp/add.hex", cpu0.imem.mem);
-        $readmemh("/tmp/add.hex", cpu0.dmem.mem);
+        // $readmemh("/tmp/add.hex", cpu0.dmem.mem);
 
         clk = 0; rst = 1;
         @(posedge clk);
@@ -36,25 +36,10 @@ module tb_cpu;
     always @(posedge clk) begin
         $display("PC = %h, INST = %h, GP = %h", pc, cpu0.inst, cpu0.regfile0.regs[3]);
 
-        if (cpu0.dmem.mem_write) begin
-            $display(">>> [MEM_WRITE] Addr: %h, Data: %h, Size: %b", 
-                     cpu0.dmem.addr, cpu0.dmem.wdata, cpu0.dmem.mem_size);
-        end
-
         if (tohost != 0) begin
             if (tohost == 1) $display("PASS");
             else $display("FAIL: test %0d", tohost >> 1);
             $finish;
-        end
-
-        if (cpu0.dmem.mem_write && cpu0.dmem.addr == 32'h1000) begin
-            if (cpu0.dmem.wdata == 32'h1) begin
-                $display("PASS");
-                $finish;
-            end else begin
-                $display("FAIL: test %0d", cpu0.dmem.wdata >> 1);
-                $finish;
-            end
         end
     end
 
