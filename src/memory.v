@@ -10,7 +10,7 @@ module memory (
     output reg [31:0] rdata
 );
 
-    reg [7:0] mem [0:8191];
+    reg [7:0] mem [0:16383];
 
     always @(*) begin
         case (mem_size)
