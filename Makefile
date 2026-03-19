@@ -1,5 +1,10 @@
 SRC = src/imm_gen.v src/regfile.v src/alu.v src/decoder.v src/memory.v src/cpu.v
 
+sim-add: $(SRC)
+	mkdir -p sim
+	iverilog -I src -o sim/sim.out tb/tb_cpu_add.v $(SRC)
+	vvp sim/sim.out
+
 sim-cpu2: $(SRC)
 	mkdir -p sim
 	iverilog -I src -o sim/sim.out tb/tb_cpu2.v $(SRC)
