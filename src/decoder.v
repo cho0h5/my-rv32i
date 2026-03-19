@@ -4,6 +4,7 @@ module decoder (
     output reg [2:0] inst_type,
     output reg [3:0] alu_op,
     output reg alu_src,
+    output reg [1:0] alu_a_src,
     output reg reg_write,
     output reg mem_read,
     output reg mem_write,
@@ -20,6 +21,7 @@ module decoder (
     always @(*) begin
         inst_type = `I_TYPE;
         alu_op = `ALU_ADD;
+        alu_a_src = `ALU_A_SRC_RS1;
         alu_src = `ALU_SRC_RS2;
         reg_write = 1'b0;
         mem_read = 1'b0;
@@ -96,6 +98,7 @@ module decoder (
             `OP_JAL: begin
                 inst_type = `J_TYPE;
                 alu_op = `ALU_ADD;
+                alu_a_src = `ALU_A_SRC_PC;
                 alu_src = `ALU_SRC_IMM;
                 reg_write = 1'b1;
                 mem_read = 1'b0;
@@ -147,6 +150,7 @@ module decoder (
             `OP_AUIPC: begin
                 inst_type = `U_TYPE;
                 alu_op = `ALU_ADD;
+                alu_a_src = `ALU_A_SRC_PC;
                 alu_src = `ALU_SRC_IMM;
                 reg_write = 1'b1;
                 mem_read = 1'b0;
@@ -157,6 +161,8 @@ module decoder (
 
             `OP_LUI: begin
                 inst_type = `U_TYPE;
+                alu_op = `ALU_ADD;
+                alu_a_src = `ALU_A_SRC_ZERO;
                 alu_src = `ALU_SRC_IMM;
                 reg_write = 1'b1;
                 mem_read = 1'b0;

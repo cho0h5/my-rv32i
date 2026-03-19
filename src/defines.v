@@ -66,3 +66,7 @@
 
 `define ALU_SRC_RS2 1'b0
 `define ALU_SRC_IMM 1'b1
+
+`define ALU_A_SRC_RS1 2'd0
+`define ALU_A_SRC_PC 2'd1
+`define ALU_A_SRC_ZERO 2'd2

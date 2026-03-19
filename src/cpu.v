@@ -7,6 +7,7 @@ module cpu (
     wire [31:0] inst;
     wire [2:0] inst_type;
     wire [3:0] alu_op;
+    wire [1:0] alu_a_src;
     wire alu_src, reg_write, mem_read, mem_write;
     wire [1:0] mem_size;
     wire mem_signed, branch, jump;
@@ -22,7 +23,7 @@ module cpu (
     reg [31:0] pc_reg;
     reg [31:0] pc_next;
 
-    wire [31:0] regfile_wdata, alu_src_val, alu_result, dmem_rdata;
+    wire [31:0] regfile_wdata, alu_a_val, alu_src_val, alu_result, dmem_rdata;
 
     memory imem (
         .clk(clk), .mem_read(1'b1), .mem_write(1'b0),
@@ -33,6 +34,7 @@ module cpu (
     decoder decoder0 (
         .inst(inst),
         .inst_type(inst_type), .alu_op(alu_op),
+        .alu_a_src(alu_a_src),
         .alu_src(alu_src), .reg_write(reg_write), .mem_read(mem_read), .mem_write(mem_write),
         .mem_size(mem_size), .mem_signed(mem_signed),
         .branch(branch), .jump(jump)
@@ -42,7 +44,7 @@ module cpu (
         .inst(inst), .type(inst_type), .imm(imm)
     );
 
-    assign regfile_wdata = mem_read ? dmem_rdata : alu_result;
+    assign regfile_wdata = jump ? (pc + 4) : (mem_read ? dmem_rdata : alu_result);
 
     regfile regfile0 (
         .clk(clk), .we(reg_write),
@@ -50,10 +52,12 @@ module cpu (
         .wdata(regfile_wdata), .rdata1(rdata1), .rdata2(rdata2)
     );
 
+    assign alu_a_val = (alu_a_src == `ALU_A_SRC_PC) ? pc :
+                       (alu_a_src == `ALU_A_SRC_ZERO) ? 32'b0 : rdata1;
     assign alu_src_val = alu_src == `ALU_SRC_RS2 ? rdata2 : imm;
 
     alu alu0 (
-        .a(rdata1), .b(alu_src_val),
+        .a(alu_a_val), .b(alu_src_val),
         .op(alu_op),
         .result(alu_result)
     );
