@@ -1,4 +1,4 @@
-SRC = src/imm_gen.v src/regfile.v src/alu.v src/decoder.v src/memory.v
+SRC = src/imm_gen.v src/regfile.v src/alu.v src/decoder.v src/memory.v src/cpu.v
 
 sim-memory: $(SRC)
 	mkdir -p sim
