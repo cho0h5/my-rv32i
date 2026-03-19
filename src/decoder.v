@@ -11,7 +11,8 @@ module decoder (
     output reg [1:0] mem_size,
     output reg mem_signed,
     output reg branch,
-    output reg jump
+    output reg jump,
+    output reg ecall
 );
 
     wire [6:0] opcode = inst[6:0];
@@ -30,6 +31,7 @@ module decoder (
         mem_signed = 1'b0;
         branch = 1'b0;
         jump = 1'b0;
+        ecall = 1'b0;
 
         case (opcode)
             `OP_LOAD: begin
@@ -169,6 +171,12 @@ module decoder (
                 mem_write = 1'b0;
                 branch = 1'b0;
                 jump = 1'b0;
+            end
+
+            `OP_SYSTEM: begin
+                if (inst[31:7] == 25'b0) begin
+                    ecall = 1'b1;
+                end
             end
         endcase
     end

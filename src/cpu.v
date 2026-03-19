@@ -10,7 +10,7 @@ module cpu (
     wire [1:0] alu_a_src;
     wire alu_src, reg_write, mem_read, mem_write;
     wire [1:0] mem_size;
-    wire mem_signed, branch, jump;
+    wire mem_signed, branch, jump, ecall;
     wire [4:0] rs1 = inst[19:15];
     wire [4:0] rs2 = inst[24:20];
     wire [4:0] rd = inst[11:7];
@@ -37,7 +37,7 @@ module cpu (
         .alu_a_src(alu_a_src),
         .alu_src(alu_src), .reg_write(reg_write), .mem_read(mem_read), .mem_write(mem_write),
         .mem_size(mem_size), .mem_signed(mem_signed),
-        .branch(branch), .jump(jump)
+        .branch(branch), .jump(jump), .ecall(ecall)
     );
 
     imm_gen imm_gen0 (
@@ -71,7 +71,8 @@ module cpu (
     assign pc = pc_reg;
 
     always @(*) begin
-        if (jump && inst[6:0] == `OP_JALR) pc_next = alu_result;
+        if (ecall) pc_next = 32'h00000004;
+        else if (jump && inst[6:0] == `OP_JALR) pc_next = alu_result;
         else if (jump) pc_next = pc + $signed(imm);
         else if (branch && funct3 == `FUNCT3_BEQ && alu_result == 32'b0) pc_next = pc + $signed(imm);
         else if (branch && funct3 == `FUNCT3_BNE && alu_result != 32'b0) pc_next = pc + $signed(imm);
