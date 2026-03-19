@@ -72,13 +72,13 @@ module cpu (
 
     always @(*) begin
         if (jump && inst[6:0] == `OP_JALR) pc_next = alu_result;
-        else if (jump) pc_next = pc + imm;
-        else if (branch && funct3 == `FUNCT3_BEQ && alu_result == 32'b0) pc_next = pc + imm;
-        else if (branch && funct3 == `FUNCT3_BNE && alu_result != 32'b0) pc_next = pc + imm;
-        else if (branch && funct3 == `FUNCT3_BLT && alu_result == 32'b1) pc_next = pc + imm;
-        else if (branch && funct3 == `FUNCT3_BGE && alu_result == 32'b0) pc_next = pc + imm;
-        else if (branch && funct3 == `FUNCT3_BLTU && alu_result == 32'b1) pc_next = pc + imm;
-        else if (branch && funct3 == `FUNCT3_BGEU && alu_result == 32'b0) pc_next = pc + imm;
+        else if (jump) pc_next = pc + $signed(imm);
+        else if (branch && funct3 == `FUNCT3_BEQ && alu_result == 32'b0) pc_next = pc + $signed(imm);
+        else if (branch && funct3 == `FUNCT3_BNE && alu_result != 32'b0) pc_next = pc + $signed(imm);
+        else if (branch && funct3 == `FUNCT3_BLT && alu_result == 32'h1) pc_next = pc + $signed(imm);
+        else if (branch && funct3 == `FUNCT3_BGE && alu_result == 32'b0) pc_next = pc + $signed(imm);
+        else if (branch && funct3 == `FUNCT3_BLTU && alu_result == 32'h1) pc_next = pc + $signed(imm);
+        else if (branch && funct3 == `FUNCT3_BGEU && alu_result == 32'b0) pc_next = pc + $signed(imm);
         else pc_next = pc + 4;
     end
 
