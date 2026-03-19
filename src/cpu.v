@@ -10,7 +10,7 @@ module cpu (
     wire [1:0] alu_a_src;
     wire alu_src, reg_write, mem_read, mem_write;
     wire [1:0] mem_size;
-    wire mem_signed, branch, jump, ecall;
+    wire mem_signed, branch, jump, ecall, csr_read;
     wire [4:0] rs1 = inst[19:15];
     wire [4:0] rs2 = inst[24:20];
     wire [4:0] rd = inst[11:7];
@@ -22,8 +22,10 @@ module cpu (
 
     reg [31:0] pc_reg;
     reg [31:0] pc_next;
+    reg [31:0] mcause;
 
     wire [31:0] regfile_wdata, alu_a_val, alu_src_val, alu_result, dmem_rdata;
+    wire [31:0] csr_rdata = (inst[31:20] == `CSR_MCAUSE) ? mcause : 32'b0;
 
     memory imem (
         .clk(clk), .mem_read(1'b1), .mem_write(1'b0),
@@ -37,14 +39,14 @@ module cpu (
         .alu_a_src(alu_a_src),
         .alu_src(alu_src), .reg_write(reg_write), .mem_read(mem_read), .mem_write(mem_write),
         .mem_size(mem_size), .mem_signed(mem_signed),
-        .branch(branch), .jump(jump), .ecall(ecall)
+        .branch(branch), .jump(jump), .ecall(ecall), .csr_read(csr_read)
     );
 
     imm_gen imm_gen0 (
         .inst(inst), .type(inst_type), .imm(imm)
     );
 
-    assign regfile_wdata = jump ? (pc + 4) : (mem_read ? dmem_rdata : alu_result);
+    assign regfile_wdata = jump ? (pc + 4) : (csr_read ? csr_rdata : (mem_read ? dmem_rdata : alu_result));
 
     regfile regfile0 (
         .clk(clk), .we(reg_write),
@@ -84,8 +86,13 @@ module cpu (
     end
 
     always @(posedge clk) begin
-        if (rst) pc_reg <= 32'b0;
-        else pc_reg <= pc_next;
+        if (rst) begin
+            pc_reg <= 32'b0;
+            mcause <= 32'b0;
+        end else begin
+            pc_reg <= pc_next;
+            if (ecall) mcause <= 32'd11;
+        end
     end
 
 endmodule

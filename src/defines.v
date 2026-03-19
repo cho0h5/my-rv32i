@@ -65,6 +65,9 @@
 `define FUNCT3_OR 3'b110
 `define FUNCT3_AND 3'b111
 
+`define FUNCT3_CSRRS 3'b010
+`define CSR_MCAUSE 12'h342
+
 `define ALU_SRC_RS2 1'b0
 `define ALU_SRC_IMM 1'b1
 
