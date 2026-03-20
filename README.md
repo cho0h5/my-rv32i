@@ -13,3 +13,57 @@
     | U | Upper Immediate | LUI, AUIPC |
     | B | Branch | BEQ, BNE, BLT, BGE, BLTU, BGEU |
     | J | Jump | JAL |
+
+    <details><summary>Test Result</summary>
+
+    ```sh
+    ➜  my-rv32i git:(main) make test-all
+    mkdir -p sim
+    iverilog -I src -o sim/sim_riscv_test.out tb/tb_riscv_test.v src/imm_gen.v src/regfile.v src/alu.v src/decoder.v src/memory.v src/cpu.v
+    [PASS] add
+    [PASS] addi
+    [PASS] and
+    [PASS] andi
+    [PASS] auipc
+    [PASS] beq
+    [PASS] bge
+    [PASS] bgeu
+    [PASS] blt
+    [PASS] bltu
+    [PASS] bne
+    [PASS] fence_i
+    [PASS] jal
+    [PASS] jalr
+    [PASS] lb
+    [PASS] lbu
+    [PASS] ld_st
+    [PASS] lh
+    [PASS] lhu
+    [PASS] lui
+    [PASS] lw
+    [PASS] ma_data
+    [PASS] or
+    [PASS] ori
+    [PASS] sb
+    [PASS] sh
+    [PASS] simple
+    [PASS] sll
+    [PASS] slli
+    [PASS] slt
+    [PASS] slti
+    [PASS] sltiu
+    [PASS] sltu
+    [PASS] sra
+    [PASS] srai
+    [PASS] srl
+    [PASS] srli
+    [PASS] st_ld
+    [PASS] sub
+    [PASS] sw
+    [PASS] xor
+    [PASS] xori
+
+    42 passed, 0 failed
+    ```
+
+    </details>
