@@ -25,10 +25,12 @@ module cpu (
     reg [31:0] pc_next;
     reg [31:0] mcause;
     reg [31:0] mtvec;
+    reg [31:0] mepc;
 
     wire [31:0] regfile_wdata, alu_a_val, alu_src_val, alu_result, dmem_rdata;
     wire [31:0] csr_rdata = (csr_addr == `CSR_MCAUSE) ? mcause :
-                            (csr_addr == `CSR_MTVEC)  ? mtvec  : 32'b0;
+                            (csr_addr == `CSR_MTVEC)  ? mtvec  :
+                            (csr_addr == `CSR_MEPC)   ? mepc   : 32'b0;
 
     memory mem0 (
         .clk(clk), .mem_read(1'b1), .mem_write(mem_write),
@@ -89,13 +91,16 @@ module cpu (
             pc_reg <= 32'b0;
             mcause <= 32'b0;
             mtvec  <= 32'b0;
+            mepc   <= 32'b0;
         end else begin
             pc_reg <= pc_next;
-            if (ecall) mcause <= 32'd11;
+            if (ecall) begin mcause <= 32'd11; mepc <= pc; end
             else if (csr_write && csr_addr == `CSR_MCAUSE) mcause <= rdata1;
             else if (csr_read  && csr_addr == `CSR_MCAUSE) mcause <= mcause | rdata1;
             if (csr_write && csr_addr == `CSR_MTVEC) mtvec <= rdata1;
             else if (csr_read  && csr_addr == `CSR_MTVEC) mtvec <= mtvec | rdata1;
+            if (csr_write && csr_addr == `CSR_MEPC) mepc <= rdata1;
+            else if (csr_read  && csr_addr == `CSR_MEPC) mepc <= mepc | rdata1;
         end
     end
 
