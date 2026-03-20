@@ -15,6 +15,7 @@ module cpu (
     wire [4:0] rs2 = inst[24:20];
     wire [4:0] rd = inst[11:7];
     wire [2:0] funct3 = inst[14:12];
+    wire [11:0] csr_addr = inst[31:20];
 
     wire [31:0] rdata1, rdata2;
 
@@ -25,7 +26,7 @@ module cpu (
     reg [31:0] mcause;
 
     wire [31:0] regfile_wdata, alu_a_val, alu_src_val, alu_result, dmem_rdata;
-    wire [31:0] csr_rdata = (inst[31:20] == `CSR_MCAUSE) ? mcause : 32'b0;
+    wire [31:0] csr_rdata = (csr_addr == `CSR_MCAUSE) ? mcause : 32'b0;
 
     memory mem0 (
         .clk(clk), .mem_read(1'b1), .mem_write(mem_write),
@@ -88,8 +89,8 @@ module cpu (
         end else begin
             pc_reg <= pc_next;
             if (ecall) mcause <= 32'd11;
-            else if (csr_write) mcause <= rdata1;
-            else if (csr_read) mcause <= mcause | rdata1;
+            else if (csr_write && csr_addr == `CSR_MCAUSE) mcause <= rdata1;
+            else if (csr_read && csr_addr == `CSR_MCAUSE) mcause <= mcause | rdata1;
         end
     end
 
