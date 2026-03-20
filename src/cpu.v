@@ -10,7 +10,7 @@ module cpu (
     wire [1:0] alu_a_src;
     wire alu_src, reg_write, mem_read, mem_write;
     wire [1:0] mem_size;
-    wire mem_signed, branch, jump, ecall, csr_read;
+    wire mem_signed, branch, jump, ecall, csr_read, csr_write;
     wire [4:0] rs1 = inst[19:15];
     wire [4:0] rs2 = inst[24:20];
     wire [4:0] rd = inst[11:7];
@@ -40,7 +40,7 @@ module cpu (
         .alu_a_src(alu_a_src),
         .alu_src(alu_src), .reg_write(reg_write), .mem_read(mem_read), .mem_write(mem_write),
         .mem_size(mem_size), .mem_signed(mem_signed),
-        .branch(branch), .jump(jump), .ecall(ecall), .csr_read(csr_read)
+        .branch(branch), .jump(jump), .ecall(ecall), .csr_read(csr_read), .csr_write(csr_write)
     );
 
     imm_gen imm_gen0 (
@@ -88,7 +88,8 @@ module cpu (
         end else begin
             pc_reg <= pc_next;
             if (ecall) mcause <= 32'd11;
-            if (csr_read) mcause <= mcause | rdata1;
+            else if (csr_write) mcause <= rdata1;
+            else if (csr_read) mcause <= mcause | rdata1;
         end
     end
 

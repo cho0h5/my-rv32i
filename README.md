@@ -8,7 +8,7 @@
     | I | Jump | JALR |
     | I | Load | LB, LH, LW, LBU, LHU |
     | I | Immediate Arithmetic | ADDI, SLTI, SLTIU, XORI, ORI, ANDI, SLLI, SRLI, SRAI |
-    | I | System | ECALL, CSRRS |
+    | I | System | ECALL, CSRRS, CSRRW |
     | S | Store | SB, SH, SW |
     | U | Upper Immediate | LUI, AUIPC |
     | B | Branch | BEQ, BNE, BLT, BGE, BLTU, BGEU |

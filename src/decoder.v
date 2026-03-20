@@ -13,7 +13,8 @@ module decoder (
     output reg branch,
     output reg jump,
     output reg ecall,
-    output reg csr_read
+    output reg csr_read,
+    output reg csr_write
 );
 
     wire [6:0] opcode = inst[6:0];
@@ -34,6 +35,7 @@ module decoder (
         jump = 1'b0;
         ecall = 1'b0;
         csr_read = 1'b0;
+        csr_write = 1'b0;
 
         case (opcode)
             `OP_LOAD: begin
@@ -178,6 +180,10 @@ module decoder (
             `OP_SYSTEM: begin
                 if (inst[31:7] == 25'b0) begin
                     ecall = 1'b1;
+                end else if (funct3 == `FUNCT3_CSRRW) begin
+                    csr_read = 1'b1;
+                    csr_write = 1'b1;
+                    reg_write = 1'b1;
                 end else if (funct3 == `FUNCT3_CSRRS) begin
                     csr_read = 1'b1;
                     reg_write = 1'b1;
