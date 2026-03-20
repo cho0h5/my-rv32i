@@ -42,4 +42,9 @@ module tb_riscv_test;
             else if (tohost != 32'h0) begin $display("FAIL: test %0d", tohost >> 1); $finish; end
         end
     end
+
+    always @(posedge clk) begin
+        if (uut.mem0.mem_write && uut.mem0.addr == 32'h4000)
+            $write("%c", uut.mem0.wdata[7:0]);
+    end
 endmodule

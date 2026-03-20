@@ -22,6 +22,18 @@ fn __mulsi3(mut a: i32, mut b: i32) -> i32 {
     result
 }
 
+fn putchar(c: u8) {
+    unsafe {
+        (0x4000 as *mut u8).write_volatile(c);
+    }
+}
+
+fn putstr(s: &[u8]) {
+    for &c in s {
+        putchar(c);
+    }
+}
+
 fn exit(code: i32) {
     let value = if code == 0 { 1 } else { 2 };
 
@@ -42,6 +54,8 @@ fn main() {
     if a * b != 42 {
         exit(1);
     }
+
+    putstr(b"hello, world\n");
 
     exit(0);
 }
