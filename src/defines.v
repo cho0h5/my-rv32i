@@ -67,6 +67,7 @@
 
 `define FUNCT3_CSRRW 3'b001
 `define FUNCT3_CSRRS 3'b010
+`define CSR_MTVEC  12'h305
 `define CSR_MCAUSE 12'h342
 
 `define ALU_SRC_RS2 1'b0
