@@ -3,3 +3,4 @@ hex/
 *.elf
 *.hex
 *.o
+ref/
