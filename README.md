@@ -68,4 +68,4 @@
 
     </details>
 
-- 2026-03-20: Run C code on the CPU
+- 2026-03-20: Run C/Rust code on the CPU
