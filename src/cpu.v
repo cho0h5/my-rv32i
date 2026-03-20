@@ -27,10 +27,11 @@ module cpu (
     wire [31:0] regfile_wdata, alu_a_val, alu_src_val, alu_result, dmem_rdata;
     wire [31:0] csr_rdata = (inst[31:20] == `CSR_MCAUSE) ? mcause : 32'b0;
 
-    memory imem (
-        .clk(clk), .mem_read(1'b1), .mem_write(1'b0),
-        .mem_size(2'b10), .mem_signed(1'b0),
-        .addr(pc), .wdata(32'b0), .rdata(inst)
+    memory mem0 (
+        .clk(clk), .mem_read(1'b1), .mem_write(mem_write),
+        .mem_size(mem_size), .mem_signed(mem_signed),
+        .addr(alu_result), .wdata(rdata2), .rdata(dmem_rdata),
+        .iaddr(pc), .inst(inst)
     );
 
     decoder decoder0 (
@@ -64,11 +65,6 @@ module cpu (
         .result(alu_result)
     );
 
-    memory dmem (
-        .clk(clk), .mem_read(1'b1), .mem_write(mem_write),
-        .mem_size(mem_size), .mem_signed(mem_signed),
-        .addr(alu_result), .wdata(rdata2), .rdata(dmem_rdata)
-    );
 
     assign pc = pc_reg;
 

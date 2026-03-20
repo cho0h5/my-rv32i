@@ -7,10 +7,15 @@ module memory (
     input [31:0] addr,
     input [31:0] wdata,
 
-    output reg [31:0] rdata
+    output reg [31:0] rdata,
+
+    input [31:0] iaddr,
+    output [31:0] inst
 );
 
     reg [7:0] mem [0:16383];
+
+    assign inst = { mem[iaddr + 3], mem[iaddr + 2], mem[iaddr + 1], mem[iaddr] };
 
     always @(*) begin
         case (mem_size)

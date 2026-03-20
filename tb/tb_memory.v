@@ -14,7 +14,8 @@ module tb_memory;
     memory uut (
         .clk(clk), .mem_read(mem_read), .mem_write(mem_write),
         .mem_size(mem_size), .mem_signed(mem_signed),
-        .addr(addr), .wdata(wdata), .rdata(rdata)
+        .addr(addr), .wdata(wdata), .rdata(rdata),
+        .iaddr(32'b0), .inst()
     );
 
     always #5 clk = ~clk;

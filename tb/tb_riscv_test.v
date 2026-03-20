@@ -14,7 +14,7 @@ module tb_riscv_test;
             $display("Usage: +HEX=<hexfile>");
             $finish;
         end
-        $readmemh(hex_file, uut.imem.mem);
+        $readmemh(hex_file, uut.mem0.mem);
         #15 rst = 0;
     end
 
@@ -26,8 +26,8 @@ module tb_riscv_test;
 
     reg [31:0] tohost;
     always @(*) begin
-        tohost = {uut.dmem.mem[tohost_addr+3], uut.dmem.mem[tohost_addr+2],
-                  uut.dmem.mem[tohost_addr+1], uut.dmem.mem[tohost_addr]};
+        tohost = {uut.mem0.mem[tohost_addr+3], uut.mem0.mem[tohost_addr+2],
+                  uut.mem0.mem[tohost_addr+1], uut.mem0.mem[tohost_addr]};
     end
 
     initial begin
