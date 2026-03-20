@@ -88,6 +88,7 @@ module cpu (
         end else begin
             pc_reg <= pc_next;
             if (ecall) mcause <= 32'd11;
+            if (csr_read) mcause <= mcause | rdata1;
         end
     end
 
