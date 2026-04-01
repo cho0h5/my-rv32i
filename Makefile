@@ -4,17 +4,14 @@ RISCV_TEST_DIR = riscv-tests/isa
 
 TESTS = $(basename $(notdir $(wildcard $(RISCV_TEST_DIR)/rv32ui/*.S)))
 
+sim/sim_riscv_test.out: tb/tb_riscv_test.v $(SRC)
+	mkdir -p sim
+	iverilog -I src -o sim/sim_riscv_test.out tb/tb_riscv_test.v $(SRC)
+
 hex/%.hex:
 	riscv64-unknown-elf-objcopy -O verilog $(RISCV_TEST_DIR)/rv32ui-p-$* hex/$*.hex
 
 build-tests: $(addprefix hex/, $(addsuffix .hex, $(TESTS)))
-
-test-%: hex/%.hex sim/sim_riscv_test.out
-	vvp sim/sim_riscv_test.out +HEX=hex/$*.hex
-
-sim/sim_riscv_test.out: tb/tb_riscv_test.v $(SRC)
-	mkdir -p sim
-	iverilog -I src -o sim/sim_riscv_test.out tb/tb_riscv_test.v $(SRC)
 
 test-all: build-tests sim/sim_riscv_test.out
 	@pass=0; fail=0; \
@@ -30,39 +27,6 @@ test-all: build-tests sim/sim_riscv_test.out
 	done; \
 	echo ""; \
 	printf "%d passed, %d failed\n" $$pass $$fail
-
-sim-add: $(SRC)
-	mkdir -p sim
-	iverilog -I src -o sim/sim.out tb/tb_cpu_add.v $(SRC)
-	vvp sim/sim.out
-
-sim-cpu2: $(SRC)
-	mkdir -p sim
-	iverilog -I src -o sim/sim.out tb/tb_cpu2.v $(SRC)
-	vvp sim/sim.out
-
-sim-cpu: $(SRC)
-	mkdir -p sim
-	iverilog -I src -o sim/sim.out tb/tb_cpu.v $(SRC)
-	vvp sim/sim.out
-
-sim-memory: $(SRC)
-	mkdir -p sim
-	iverilog -I src -o sim/sim.out tb/tb_memory.v $(SRC)
-	vvp sim/sim.out
-
-sim-regfile: $(SRC)
-	mkdir -p sim
-	iverilog -I src -o sim/sim.out tb/tb_regfile.v $(SRC)
-	vvp sim/sim.out
-
-sim-alu: $(SRC)
-	mkdir -p sim
-	iverilog -I src -o sim/sim.out tb/tb_alu.v $(SRC)
-	vvp sim/sim.out
-
-check: $(SRC)
-	iverilog -I src -o /dev/null $(SRC)
 
 wave:
 	gtkwave sim/dump.vcd
