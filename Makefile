@@ -2,12 +2,7 @@ SRC = src/imm_gen.v src/regfile.v src/alu.v src/decoder.v src/memory.v src/cpu.v
 
 RISCV_TEST_DIR = riscv-tests/isa
 
-TESTS = add addi and andi auipc \
-        beq bge bgeu blt bltu bne \
-        fence_i jal jalr \
-        lb lbu ld_st lh lhu lui lw ma_data \
-        or ori sb sh simple sll slli slt slti sltiu sltu \
-        sra srai srl srli st_ld sub sw xor xori
+TESTS = $(basename $(notdir $(wildcard $(RISCV_TEST_DIR)/rv32ui/*.S)))
 
 hex/%.hex:
 	riscv64-unknown-elf-objcopy -O verilog $(RISCV_TEST_DIR)/rv32ui-p-$* hex/$*.hex
