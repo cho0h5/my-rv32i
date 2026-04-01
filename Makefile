@@ -1,6 +1,6 @@
 SRC = src/imm_gen.v src/regfile.v src/alu.v src/decoder.v src/memory.v src/cpu.v
 
-RISCV_TEST_DIR = $(HOME)/riscv-tests/isa
+RISCV_TEST_DIR = riscv-tests/isa
 
 TESTS = add addi and andi auipc \
         beq bge bgeu blt bltu bne \
