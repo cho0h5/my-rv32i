@@ -9,14 +9,14 @@ hex/%.hex:
 
 build-tests: $(addprefix hex/, $(addsuffix .hex, $(TESTS)))
 
-test-%: hex/%.hex $(SRC)
-	mkdir -p sim
-	iverilog -I src -o sim/sim_riscv_test.out tb/tb_riscv_test.v $(SRC)
+test-%: hex/%.hex sim/sim_riscv_test.out
 	vvp sim/sim_riscv_test.out +HEX=hex/$*.hex
 
-test-all: build-tests $(SRC)
+sim/sim_riscv_test.out: tb/tb_riscv_test.v $(SRC)
 	mkdir -p sim
 	iverilog -I src -o sim/sim_riscv_test.out tb/tb_riscv_test.v $(SRC)
+
+test-all: build-tests sim/sim_riscv_test.out
 	@pass=0; fail=0; \
 	for t in $(TESTS); do \
 		tohost=1000; \
