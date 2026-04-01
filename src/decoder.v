@@ -14,7 +14,8 @@ module decoder (
     output reg jump,
     output reg ecall,
     output reg csr_read,
-    output reg csr_write
+    output reg csr_write,
+    output reg csr_use_imm
 );
 
     wire [6:0] opcode = inst[6:0];
@@ -36,6 +37,7 @@ module decoder (
         ecall = 1'b0;
         csr_read = 1'b0;
         csr_write = 1'b0;
+        csr_use_imm = 1'b0;
 
         case (opcode)
             `OP_LOAD: begin
@@ -186,6 +188,15 @@ module decoder (
                     reg_write = 1'b1;
                 end else if (funct3 == `FUNCT3_CSRRS) begin
                     csr_read = 1'b1;
+                    reg_write = 1'b1;
+                end else if (funct3 == `FUNCT3_CSRRWI) begin
+                    csr_read = 1'b1;
+                    csr_write = 1'b1;
+                    csr_use_imm = 1'b1;
+                    reg_write = 1'b1;
+                end else if (funct3 == `FUNCT3_CSRRSI) begin
+                    csr_read = 1'b1;
+                    csr_use_imm = 1'b1;
                     reg_write = 1'b1;
                 end
             end

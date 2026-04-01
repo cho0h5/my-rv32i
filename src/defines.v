@@ -65,9 +65,13 @@
 `define FUNCT3_OR 3'b110
 `define FUNCT3_AND 3'b111
 
-`define FUNCT3_CSRRW 3'b001
-`define FUNCT3_CSRRS 3'b010
+`define FUNCT3_CSRRW  3'b001
+`define FUNCT3_CSRRS  3'b010
+`define FUNCT3_CSRRWI 3'b101
+`define FUNCT3_CSRRSI 3'b110
+
 `define CSR_MTVEC  12'h305
+`define CSR_MSCRATCH 12'h340
 `define CSR_MEPC   12'h341
 `define CSR_MCAUSE 12'h342
 
